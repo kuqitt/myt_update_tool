@@ -5,3 +5,5 @@ public
 app.spec
 app.manifest
 .idea
+*__pycache__
+__pycache__/*
