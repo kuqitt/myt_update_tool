@@ -1,0 +1,6 @@
+.venv
+build
+dist
+public
+app.spec
+app.manifest
