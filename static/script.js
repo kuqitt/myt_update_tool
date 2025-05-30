@@ -10,10 +10,11 @@ $(document).ready(function () {
         fetchDevices();
     });
     $('#select-all-btn').click(function () {
-        const checkboxes = $('#device-list input[type=checkbox]');
-        const allChecked = checkboxes.length === checkboxes.filter(':checked').length;
-        checkboxes.prop('checked', !allChecked);
+        const visibleCheckboxes = $('#device-list .form-check:visible input[type=checkbox]');
+        const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.filter(':checked').length === visibleCheckboxes.length;
+        visibleCheckboxes.prop('checked', !allChecked);
     });
+
 
     $('#start-btn').click(function() {
         const btn = $(this);
@@ -44,7 +45,20 @@ $(document).ready(function () {
 
     setInterval(fetchLogs, 1000);
 });
-
+// 监听 IP 搜索框输入
+   $('#ipSearch').on('input', function () {
+       console.log(1)
+        const keyword = $(this).val().toLowerCase();
+       console.log(keyword)
+        $('#device-list .device-item').each(function () {
+            const ip = $(this).data('ip')?.toLowerCase() || '';
+            if (ip.includes(keyword)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
 function fetchDevices() {
     $.get('/api/device/list', function (response) {
         if (response.code === 200 && response.data) {
@@ -53,11 +67,13 @@ function fetchDevices() {
             for (const [ip, deviceCode] of Object.entries(response.data)) {
                 const checkboxId = 'device-' + deviceCode;
                 const checkbox = `
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="${ip}" id="${checkboxId}">
-                        <label class="form-check-label" for="${checkboxId}">
-                            ${ip}
-                        </label>
+                    <div class="device-item" data-ip="${ip}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="${ip}" id="${checkboxId}">
+                            <label class="form-check-label" for="${checkboxId}">
+                                ${ip}
+                            </label>
+                        </div>
                     </div>
                 `;
                 deviceList.append(checkbox);
