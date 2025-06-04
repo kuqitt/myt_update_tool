@@ -42,7 +42,7 @@ exe = EXE(
     uac_admin=True,
     strip=False,
     upx=True,
-    console=False,          # ✅ 需要控制台日志设置 True
+    console=True,          # ✅ 需要控制台日志设置 True
     icon='icon.ico',       # ✅ 设置你的图标
     win32_manifest='app.manifest',  # <-- 加这一行
 )
